@@ -1,0 +1,6 @@
+services:
+  - type: pstatic
+    name: Test_MiniNote
+    staticPublishPath: ./
+    destinations:
+      - name: production

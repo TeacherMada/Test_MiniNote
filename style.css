@@ -1,0 +1,74 @@
+/* Custom styles are minimal since we rely heavily on Tailwind */
+
+body {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Glass Card Effect for Input Area */
+.glass-card-dark {
+    background: rgba(30, 41, 59, 0.7); /* slate-900/70 */
+    border: 1px solid rgba(51, 65, 85, 0.5); /* slate-700/50 */
+}
+
+.glass-card-light {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(203, 213, 225, 0.5); /* slate-300/50 */
+}
+
+/* Note Styling */
+.note-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Utility Classes for dynamic colors */
+.dark-input-field {
+    background-color: rgb(15, 23, 42); /* slate-900 */
+    color: rgb(241, 245, 249); /* slate-100 */
+    border: 1px solid rgb(51, 65, 85); /* slate-700 */
+}
+
+.dark-input-field::placeholder {
+    color: rgb(100, 116, 139); /* slate-500 */
+}
+
+.light-input-field {
+    background-color: #ffffff;
+    color: #1e293b; /* slate-800 */
+    border: 1px solid #e2e8f0; /* slate-200 */
+}
+
+.light-input-field::placeholder {
+    color: #94a3b8; /* slate-400 */
+}
+
+/* Ensure text visibility in light mode */
+.light-mode-text {
+    color: #1e293b; /* slate-800 */
+}
+
+.light-mode-muted {
+    color: #64748b; /* slate-500 */
+}
+
+/* Adjust Button Colors based on theme */
+.dark-add-btn {
+    background-color: #3b82f6; /* blue-500 */
+}
+
+.dark-add-btn:hover {
+    background-color: #2563eb; /* blue-600 */
+}
+
+.light-add-btn {
+    background-color: #3b82f6; /* blue-500 */
+    color: white;
+}
+
+.light-add-btn:hover {
+    background-color: #2563eb; /* blue-600 */
+}
