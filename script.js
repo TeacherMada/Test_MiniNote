@@ -17,6 +17,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('themeToggle');
     const iconLight = document.getElementById('iconLight');
     const iconDark = document.getElementById('iconDark');
+    const toastContainer = document.getElementById('toastContainer');
+
+    // --- Toast Notification Logic ---
+    const showToast = (message, type = 'success', duration = 3000) => {
+        const toast = document.createElement('div');
+        toast.className = `toast text-sm font-medium pointer-events-auto ${type === 'success' ? 'toast-success' : 'toast-error'}`;
+        toast.textContent = message;
+
+        toastContainer.appendChild(toast);
+
+        // Trigger show animation
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        // Trigger hide animation and removal
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 400); // Match transition time
+        }, duration);
+    };
+
+    // Helper to get a random vibrant color class for Tailwind
+    const getRandomColor = () => {
+        // Using vibrant Tailwind colors that look good on both light and dark backgrounds
+        const colors = [
+            'bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500', 'bg-orange-500'
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+    };
 
     // --- Theme Management ---
     const applyTheme = (darkMode) => {
@@ -33,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
             body.classList.add('bg-slate-900', 'text-white', 'transition-colors', 'duration-500');
             appContainer.classList.add('bg-slate-900', 'text-white', 'transition-colors', 'duration-500');
             
-            appTitle.classList.add('bg-clip-text', 'text-transparent', 'bg-gradient-to-r', 'from-white', 'to-blue-200');
-            appSubtitle.classList.add('text-lg', 'text-blue-200/80');
+            appTitle.classList.add('bg-clip-text', 'text-transparent', 'bg-gradient-to-r', 'from-white', 'to-violet-300');
+            appSubtitle.classList.add('text-lg', 'text-violet-200/80');
             
             inputArea.classList.add('glass-card-dark', 'shadow-2xl');
             
@@ -43,8 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.note-card').forEach(card => {
                 // Clean existing dynamic classes and reapply structure/dark styles
                 card.className = card.className.replace(/(^|\s)(bg-|text-|border-).+?\s*/g, '').trim();
-                card.classList.add('note-card', 'p-5', 'rounded-xl', 'shadow-lg', 'flex', 'flex-col', 'border-l-4', 'border-blue-500', 'transition-all', 'duration-300', 'hover:shadow-xl', 'bg-slate-800/70', 'text-white', 'border-slate-700/50');
                 
+                // Retain color information if present, otherwise use default dark border
+                const currentColorClass = card.dataset.color || 'bg-violet-500';
+
+                card.classList.add('note-card', 'p-5', 'rounded-xl', 'shadow-lg', 'flex', 'flex-col', 'transition-all', 'duration-300', 'hover:shadow-xl', 'bg-slate-800/70', 'text-white', 'border-l-4');
+                card.classList.add(currentColorClass.replace('bg-', 'border-')); // Use border color from data attribute
+
                 const ts = card.querySelector('.note-timestamp');
                 if(ts) ts.className = 'text-xs text-slate-400';
                 const title = card.querySelector('.note-title');
@@ -61,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body.classList.add('bg-slate-50', 'text-slate-900', 'transition-colors', 'duration-500');
             appContainer.classList.add('bg-white', 'text-slate-900', 'transition-colors', 'duration-500');
             
-            appTitle.classList.add('bg-clip-text', 'text-transparent', 'bg-gradient-to-r', 'from-slate-900', 'to-blue-600');
+            appTitle.classList.add('bg-clip-text', 'text-transparent', 'bg-gradient-to-r', 'from-slate-900', 'to-violet-600');
             appSubtitle.classList.add('text-lg', 'text-slate-600');
             
             inputArea.classList.add('glass-card-light', 'shadow-xl');
@@ -71,10 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.note-card').forEach(card => {
                 // Clean existing dynamic classes and reapply structure/light styles
                 card.className = card.className.replace(/(^|\s)(bg-|text-|border-).+?\s*/g, '').trim();
-                card.classList.add('note-card', 'p-5', 'rounded-xl', 'shadow-lg', 'flex', 'flex-col', 'border-l-4', 'border-blue-500', 'transition-all', 'duration-300', 'hover:shadow-xl', 'bg-white', 'text-slate-900', 'border-slate-200');
+                
+                // Retain color information if present, otherwise use default light border
+                const currentColorClass = card.dataset.color || 'bg-violet-500';
+
+                card.classList.add('note-card', 'p-5', 'rounded-xl', 'shadow-lg', 'flex', 'flex-col', 'transition-all', 'duration-300', 'hover:shadow-xl', 'bg-white', 'text-slate-900', 'border-l-4');
+                card.classList.add(currentColorClass.replace('bg-', 'border-')); // Use border color from data attribute
                 
                 const ts = card.querySelector('.note-timestamp');
-                if(ts) ts.className = 'text-xs light-mode-muted';
+                if(ts) ts.className = 'text-xs text-slate-500';
                 const title = card.querySelector('.note-title');
                 if(title) title.className = 'text-xl font-semibold text-slate-900 mb-1';
                 const content = card.querySelector('.note-content-text');
@@ -117,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             notesList.appendChild(noteElement);
         });
         
-        // Re-apply theme styles to newly rendered notes (important if called before initial theme application completes)
+        // Re-apply theme styles to newly rendered notes
         applyTheme(isDarkMode);
     };
 
@@ -125,8 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         const timestamp = new Date(note.timestamp).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         
+        // Store the color used for the border
+        card.dataset.color = note.colorClass || 'bg-violet-500'; 
+
         // Base structure classes defined here. Theme classes are conditionally added/overwritten in applyTheme.
-        card.className = `note-card p-5 rounded-xl shadow-lg flex flex-col border-l-4 border-blue-500 transition-all duration-300 hover:shadow-xl`;
+        card.className = `note-card p-5 rounded-xl shadow-lg flex flex-col border-l-4 transition-all duration-300 hover:shadow-xl`;
         
         card.innerHTML = `
             <div class="flex justify-between items-start mb-2">
@@ -149,9 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const deleteNote = (id) => {
-        notes = notes.filter(note => note.id !== id);
-        saveNotes();
-        renderNotes(); // Rerender applies theme classes again
+        const noteIndex = notes.findIndex(note => note.id === id);
+        if (noteIndex !== -1) {
+            const deletedTitle = notes[noteIndex].title;
+            notes = notes.filter(note => note.id !== id);
+            saveNotes();
+            renderNotes(); // Rerender applies theme classes again
+            showToast(`Note "${deletedTitle}" supprimée !`, 'error');
+        }
     };
 
     const addNote = () => {
@@ -159,16 +209,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = noteContentTextarea.value.trim();
 
         if (!content) {
-            alert("Le contenu de la note ne peut pas être vide.");
+            // Show Toast notification for error
+            showToast("Le contenu de la note est essentiel pour la magie !", 'error', 4000);
             noteContentTextarea.focus();
             return;
         }
+
+        const color = getRandomColor();
 
         const newNote = {
             id: Date.now().toString(),
             title: title || "(Note sans titre)",
             content: content,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            colorClass: color
         };
 
         notes.push(newNote);
@@ -177,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         noteContentTextarea.value = '';
         noteTitleInput.focus(); // Return focus to title input
         renderNotes();
+        showToast(`Note "${newNote.title}" créée avec succès !`, 'success');
     };
 
     // --- Initial Setup ---

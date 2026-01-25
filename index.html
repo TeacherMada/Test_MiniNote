@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Note</title>
+    <title>Mini Note Magique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="font-sans min-h-screen transition-colors duration-500" id="body">
     
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] space-y-3 pointer-events-none"></div>
+
     <!-- Theme Toggle Button -->
     <button id="themeToggle" aria-label="Basculer le thème" class="fixed top-4 right-4 p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 transition z-50 shadow-lg">
         <svg id="iconLight" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun w-6 h-6 text-yellow-400 hidden">
@@ -24,29 +27,27 @@
         
         <!-- Header -->
         <header class="w-full max-w-3xl mb-8 text-center">
-            <h1 class="text-5xl font-extrabold tracking-tight mb-2" id="appTitle">Mini Note</h1>
-            <p class="text-lg" id="appSubtitle">Capturez vos pensées rapidement.</p>
+            <h1 class="text-5xl font-extrabold tracking-tight mb-2" id="appTitle">Note Magique</h1>
+            <p class="text-lg" id="appSubtitle">Créez, modifiez et supprimez des notes avec des couleurs aléatoires !</p>
         </header>
 
         <!-- Note Input Area -->
         <div class="w-full max-w-3xl mb-8">
             <div id="inputArea" class="p-6 rounded-2xl shadow-2xl transition-all duration-500 border-2 border-transparent">
-                <input type="text" id="noteTitle" placeholder="Titre de la note..." class="w-full p-3 mb-3 text-lg rounded-lg focus:ring-2 focus:ring-offset-0 outline-none transition-all duration-300" aria-label="Titre de la note">
-                <textarea id="noteContent" placeholder="Écrivez votre contenu ici..." rows="5" class="w-full p-4 text-base rounded-lg resize-none focus:ring-2 focus:ring-offset-0 outline-none transition-all duration-300" aria-label="Contenu de la note"></textarea>
+                <input type="text" id="noteTitle" placeholder="Titre de la note (Optionnel)..." class="w-full p-3 mb-3 text-lg rounded-lg focus:ring-2 focus:ring-offset-0 outline-none transition-all duration-300" aria-label="Titre de la note">
+                <textarea id="noteContent" placeholder="Écrivez votre contenu magique ici..." rows="5" class="w-full p-4 text-base rounded-lg resize-none focus:ring-2 focus:ring-offset-0 outline-none transition-all duration-300" aria-label="Contenu de la note"></textarea>
                 <button id="addNoteBtn" class="mt-3 w-full py-3 rounded-xl font-semibold text-white shadow-lg transition-all duration-300 transform hover:scale-[1.01] flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                    Ajouter la Note
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M9.9 13.2a1 1 0 0 0 1.6 1.2l4.1-4.1a1 1 0 0 0 0-1.4l-4.1-4.1a1 1 0 0 0-1.4 0l-4.1 4.1a1 1 0 0 0 0 1.4z"/><path d="M21.2 12.8a1 1 0 0 0-1.4 1.4l4.1 4.1a1 1 0 0 1-1.4 1.4l-4.1-4.1a1 1 0 0 1 0-1.4z"/><path d="M12.8 2.8a1 1 0 0 0-1.4 1.4l-4.1 4.1a1 1 0 0 0 0 1.4l4.1 4.1a1 1 0 0 0 1.4 0l4.1-4.1a1 1 0 0 0 0-1.4z"/><path d="M11.2 20.8a1 1 0 0 0 1.4-1.4l-4.1-4.1a1 1 0 0 0-1.4 0l-4.1 4.1a1 1 0 0 0 0 1.4z"/></svg>
+                    Créer une Note Magique
                 </button>
             </div>
         </div>
 
         <!-- Notes List -->
         <div class="w-full max-w-3xl">
-            <h2 class="text-2xl font-bold mb-4" id="notesHeader">Notes Récentes</h2>
-            <div id="notesList" class="space-y-4">
-                <!-- Notes will be inserted here by JavaScript -->
-            </div>
-            <p id="emptyMessage" class="text-center p-8 text-lg italic opacity-70 hidden">Aucune note pour le moment. Commencez à écrire !</p>
+            <h2 class="text-2xl font-bold mb-4" id="notesHeader">Notes Enchantées</h2>
+            <div id="notesList" class="space-y-4"></div>
+            <p id="emptyMessage" class="text-center p-8 text-lg italic opacity-70 hidden">Le parchemin est vierge. Lancez un sort pour créer une note !</p>
         </div>
 
     </div>
